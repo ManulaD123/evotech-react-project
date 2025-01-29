@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { getMovies } from "../libs/apis/server";
 import {
   Card,
   CardContent,
@@ -8,6 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { getMovies } from "../libs/apis/server";
+import { LiaImdb } from "react-icons/lia";
 
 export default async function DashboardPage() {
   // 1. Add shadcn Cad
@@ -36,14 +38,42 @@ export default async function DashboardPage() {
               <div key={movie?._id} className="h-[480px]">
                 <Card className="h-full">
                   <CardHeader>
-                    <CardTitle>{movie?.title}</CardTitle>
-                    <CardDescription className="sr-only">{movie?.title}</CardDescription>
+                    <CardTitle className="text-center">
+                      {movie?.title}{" "}
+                      <span className="text-xs text-neutral-400 font-normal">
+                        -{movie?.year ?? "N/A"}
+                      </span>{" "}
+                    </CardTitle>
+                    <CardDescription className="sr-only">
+                      {movie?.title}
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="flex justify-center bg-black w-full h-[220px] mb-4 rounded">
-                    <Image src={movie?.poster} alt={movie?.title} width={200} height={400} className="h-full w-auto object-contain " priority={true}/>
-                    </div> 
-                    <p className="line-clamp-3">{movie?.plot}</p>          
+                      <Image
+                        src={movie?.poster}
+                        alt={movie?.title}
+                        width={200}
+                        height={400}
+                        className="h-full w-auto object-contain "
+                        priority={true}
+                      />
+                    </div>
+                    <div className="flex flex-col justify-between h-[154px]">
+                    <p className="line-clamp-3 text-xs">{movie?.plot}</p>
+                    <div className="text-sm text-blue-900 font-semibold">
+                      {movie?.genres?.length && movie?.genres?.join(" / ")}
+                    </div>
+                    <div className="flex flex-row justify-between items-center">
+                      <Badge variant="success" className="font-medium">
+                        Rated: {movie?.rated ?? "N/A"}
+                      </Badge>
+                      <div className="flex flex-row gap-2 items-center" title="IMDB Rating">
+                        <LiaImdb className="text-yellow-600 text-3xl" />
+                      <span className="text-sm font-semibold">{movie?.imdb?.rating ?? 0}/10</span>
+                      </div>
+                      </div>
+                    </div>
                   </CardContent>
                   <CardFooter className="flex justify-between"></CardFooter>
                 </Card>
