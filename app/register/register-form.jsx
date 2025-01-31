@@ -9,10 +9,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Loader2 } from "lucide-react"
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
+import { registerUser } from "../libs/apis/server";
 
 
 const DEFAULT_ERROR={
@@ -22,26 +24,40 @@ const DEFAULT_ERROR={
 
 export default function RegisterForm() {
 const [error, setError]=useState(DEFAULT_ERROR);
+const [isLoading, setLoading]=useState(false);
 
   const handleSubmitForm = async (event) => {
     event.preventDefault();
     const formData = new FormData(event?.currentTarget);
-    const name = formData.get("name") ?? "";
-    const email = formData.get("email") ?? "";
+    const name= formData.get("name").toString();
+    const email = formData.get("email").toString();
     const password = formData.get("password") ?? "";
     const confirmPassword = formData.get("confirm_password") ?? "";
 
    
-
-    if (name && email && password && confirmPassword){
+// basic frontend validation logic
+  //  if (name && email && password && confirmPassword){
         if(password===confirmPassword){
             setError(DEFAULT_ERROR)
+            setLoading(true);
+            const registerResp= await registerUser({name, email, password})
+            setLoading(false);
+
+
+           if(registerResp?.error){
+            setError({error: true, message: registerResp.error});
+           }
+            
         }else{
             setError({error:true, message:"Password doesn't match"})
         }
-    }
 
- console.log("error",error );
+        //console.log("Form Data : ",{name,password,email,confirmPassword});
+   // }
+
+ //console.log("error",error );
+ 
+ 
     
   };
 
@@ -115,7 +131,8 @@ const [error, setError]=useState(DEFAULT_ERROR);
             </div>
           </CardContent>
           <CardFooter className="flex justify-center">
-            <Button className="flex-1" type="submit">
+            <Button className="flex-1" type="submit" disabled={isLoading}>
+       { isLoading  &&  <Loader2 className="animate-spin" />}
               Register
             </Button>
           </CardFooter>

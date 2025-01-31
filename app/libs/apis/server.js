@@ -1,6 +1,7 @@
 //import ky from "ky";
 import { api } from "../api";
 
+//----------------login user-------------------------
 
 export const loginUser = async (loginData) => {
   // console.log(loginData);
@@ -15,20 +16,47 @@ export const loginUser = async (loginData) => {
   console.log("LOGIN ACTION", response.json());
 };
 
+//------------------Register User------------------------
+
+export const registerUser = async (formData) => {
+  try {
+    const response = await api.post("register", { json: formData });
+
+  if(response.ok){
+    return response.json();
+  }else{
+    return undefined;
+  }
+  } catch (error) {
+    const status=error.response.status;
+    const responseBody= await error.response.json();
+    if (status && responseBody){
+      if (status===409){  
+        return responseBody
+      }
+      return undefined;
+      
+    }
+    return undefined;
+  }
+};
+
+//----------------Get Movies------------------------------
+
 export const getMovies = async () => {
   try {
     const response = await api.get("movies");
-//------------above method or below method can use------------
+    //------------above method or below method can use------------
 
     // const response = await ky.get("http://localhost:3000/api/v1/movies",{
     // cache:"no-store"
     // });
 
-   if(response.ok){
-    return response.json();
-   }else{
-    return{error:true, message: "Something went wronng"}
-   }
+    if (response.ok) {
+      return response.json();
+    } else {
+      return { error: true, message: "Something went wronng" };
+    }
   } catch (error) {
     if (error) {
       // handle HTTP errors specifically
