@@ -15,6 +15,9 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
 import { registerUser } from "../libs/apis/server";
+import { useToast } from "@/hooks/use-toast"
+import { ToastAction } from "@/components/ui/toast"
+
 
 
 const DEFAULT_ERROR={
@@ -25,6 +28,7 @@ const DEFAULT_ERROR={
 export default function RegisterForm() {
 const [error, setError]=useState(DEFAULT_ERROR);
 const [isLoading, setLoading]=useState(false);
+const { toast } = useToast()
 
   const handleSubmitForm = async (event) => {
     event.preventDefault();
@@ -36,7 +40,7 @@ const [isLoading, setLoading]=useState(false);
 
    
 // basic frontend validation logic
-  //  if (name && email && password && confirmPassword){
+  //if (name && email && password && confirmPassword){
         if(password===confirmPassword){
             setError(DEFAULT_ERROR)
             setLoading(true);
@@ -46,6 +50,13 @@ const [isLoading, setLoading]=useState(false);
 
            if(registerResp?.error){
             setError({error: true, message: registerResp.error});
+           } else{
+            toast({
+                variant: "success",
+                title: "Registration successful !",
+                description: "Please continue with login.",
+                action:<Link href="/login"><ToastAction altText="Login" className="hover:bg-green-500/90" >Login</ToastAction></Link> ,
+              });
            }
             
         }else{
@@ -53,7 +64,7 @@ const [isLoading, setLoading]=useState(false);
         }
 
         //console.log("Form Data : ",{name,password,email,confirmPassword});
-   // }
+    //}
 
  //console.log("error",error );
  
