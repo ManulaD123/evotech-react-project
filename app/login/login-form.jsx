@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { loginUser } from "../libs/apis/server";
+import { loginUser } from "../../lib/apis/server";
 
 // client component for client side rendering(CSR)
 export default function LogingForm(props) {
@@ -33,8 +33,7 @@ export default function LogingForm(props) {
       //login form data submission
       //login request
       const login = await loginUser({ email: email, password: password });
-      console.log("LOGIN RESPONSE",login);
-      
+      console.log("LOGIN RESPONSE", login);
     }
   };
   return (

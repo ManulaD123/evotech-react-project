@@ -1,6 +1,5 @@
-import clientPromise from "@/app/libs/mongodb";
+import clientPromise from "@/lib/mongodb";
 import { NextResponse } from "next/server";
-
 
 export const GET = async (req) => {
   // get movies from mongo db
@@ -17,13 +16,12 @@ export const GET = async (req) => {
       .limit(10) // movies records limit
       .toArray();
 
-      return NextResponse.json(movies);
-      
+    return NextResponse.json(movies);
   } catch (error) {
     console.log("MONGODB ERROR", error);
     return NextResponse.json(
-        {error: "Internal Server Error"},
-        {status: 500},
-    )
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 };

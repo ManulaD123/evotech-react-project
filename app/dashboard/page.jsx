@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { getMovies } from "../libs/apis/server";
+import { getMovies } from "../../lib/apis/server";
 import { LiaImdb } from "react-icons/lia";
 
 export default async function DashboardPage() {
@@ -60,18 +60,23 @@ export default async function DashboardPage() {
                       />
                     </div>
                     <div className="flex flex-col justify-between h-[154px]">
-                    <p className="line-clamp-3 text-xs">{movie?.plot}</p>
-                    <div className="text-sm text-blue-900 font-semibold">
-                      {movie?.genres?.length && movie?.genres?.join(" / ")}
-                    </div>
-                    <div className="flex flex-row justify-between items-center">
-                      <Badge variant="success" className="font-medium">
-                        Rated: {movie?.rated ?? "N/A"}
-                      </Badge>
-                      <div className="flex flex-row gap-2 items-center" title="IMDB Rating">
-                        <LiaImdb className="text-yellow-600 text-3xl" />
-                      <span className="text-sm font-semibold">{movie?.imdb?.rating ?? 0}/10</span>
+                      <p className="line-clamp-3 text-xs">{movie?.plot}</p>
+                      <div className="text-sm text-blue-900 font-semibold">
+                        {movie?.genres?.length && movie?.genres?.join(" / ")}
                       </div>
+                      <div className="flex flex-row justify-between items-center">
+                        <Badge variant="success" className="font-medium">
+                          Rated: {movie?.rated ?? "N/A"}
+                        </Badge>
+                        <div
+                          className="flex flex-row gap-2 items-center"
+                          title="IMDB Rating"
+                        >
+                          <LiaImdb className="text-yellow-600 text-3xl" />
+                          <span className="text-sm font-semibold">
+                            {movie?.imdb?.rating ?? 0}/10
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </CardContent>

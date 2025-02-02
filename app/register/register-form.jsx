@@ -9,67 +9,65 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
-import { registerUser } from "../libs/apis/server";
-import { useToast } from "@/hooks/use-toast"
-import { ToastAction } from "@/components/ui/toast"
+import { registerUser } from "../../lib/apis/server";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
-
-
-const DEFAULT_ERROR={
-    error:false,
-    message:"",
+const DEFAULT_ERROR = {
+  error: false,
+  message: "",
 };
 
 export default function RegisterForm() {
-const [error, setError]=useState(DEFAULT_ERROR);
-const [isLoading, setLoading]=useState(false);
-const { toast } = useToast()
+  const [error, setError] = useState(DEFAULT_ERROR);
+  const [isLoading, setLoading] = useState(false);
+  const { toast } = useToast();
 
   const handleSubmitForm = async (event) => {
     event.preventDefault();
     const formData = new FormData(event?.currentTarget);
-    const name= formData.get("name").toString();
+    const name = formData.get("name").toString();
     const email = formData.get("email").toString();
     const password = formData.get("password") ?? "";
     const confirmPassword = formData.get("confirm_password") ?? "";
 
-   
-// basic frontend validation logic
-  //if (name && email && password && confirmPassword){
-        if(password===confirmPassword){
-            setError(DEFAULT_ERROR)
-            setLoading(true);
-            const registerResp= await registerUser({name, email, password})
-            setLoading(false);
+    // basic frontend validation logic
+    //if (name && email && password && confirmPassword){
+    if (password === confirmPassword) {
+      setError(DEFAULT_ERROR);
+      setLoading(true);
+      const registerResp = await registerUser({ name, email, password });
+      setLoading(false);
 
+      if (registerResp?.error) {
+        setError({ error: true, message: registerResp.error });
+      } else {
+        toast({
+          variant: "success",
+          title: "Registration successful !",
+          description: "Please continue with login.",
+          action: (
+            <Link href="/login">
+              <ToastAction altText="Login" className="hover:bg-green-500/90">
+                Login
+              </ToastAction>
+            </Link>
+          ),
+        });
+      }
+    } else {
+      setError({ error: true, message: "Password doesn't match" });
+    }
 
-           if(registerResp?.error){
-            setError({error: true, message: registerResp.error});
-           } else{
-            toast({
-                variant: "success",
-                title: "Registration successful !",
-                description: "Please continue with login.",
-                action:<Link href="/login"><ToastAction altText="Login" className="hover:bg-green-500/90" >Login</ToastAction></Link> ,
-              });
-           }
-            
-        }else{
-            setError({error:true, message:"Password doesn't match"})
-        }
-
-        //console.log("Form Data : ",{name,password,email,confirmPassword});
+    //console.log("Form Data : ",{name,password,email,confirmPassword});
     //}
 
- //console.log("error",error );
- 
- 
-    
+    //console.log("error",error );
   };
 
   return (
@@ -123,11 +121,10 @@ const { toast } = useToast()
 
               <div className="flex justify-center">
                 {error?.error && (
-                    <span className="text-red-600 text-xs text-center">
-                        {error.message}
-                    </span>
+                  <span className="text-red-600 text-xs text-center">
+                    {error.message}
+                  </span>
                 )}
-
               </div>
 
               <div className="flex justify-center gap-1 text-xs">
@@ -143,7 +140,7 @@ const { toast } = useToast()
           </CardContent>
           <CardFooter className="flex justify-center">
             <Button className="flex-1" type="submit" disabled={isLoading}>
-       { isLoading  &&  <Loader2 className="animate-spin" />}
+              {isLoading && <Loader2 className="animate-spin" />}
               Register
             </Button>
           </CardFooter>
