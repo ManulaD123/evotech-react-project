@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
-import { loginUser } from "../../lib/apis/server";
+import { signIn } from "@/lib/auth-client";
+import { redirect } from "next/navigation";
+//import { loginUser } from "../../lib/apis/server";
 
 // client component for client side rendering(CSR)
 export default function LogingForm(props) {
@@ -32,8 +34,24 @@ export default function LogingForm(props) {
     if (isValid) {
       //login form data submission
       //login request
-      const login = await loginUser({ email: email, password: password });
-      console.log("LOGIN RESPONSE", login);
+      // const login = await loginUser({ email: email, password: password });
+      //console.log("LOGIN RESPONSE", login);
+
+      await signIn.email(
+        {
+          email,
+          password,
+        },
+        {
+          onSuccess: () => {
+            redirect("/dashboard");
+          },
+          onError: (ctx) => {
+            console.log(ctx.error.message);
+            //setErrorMap(ctx.error.message);
+          },
+        }
+      );
     }
   };
   return (
