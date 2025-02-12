@@ -3,7 +3,7 @@ import UserNav from "./components/user-nav";
 
 export default function DashboardLayout({ children }) {
   return (
-    <div className="flex min-h-screen overflow-hidden bg-gray-100">
+    <div className="flex h-screen overflow-hidden bg-gray-100">
 
         {/* side panel */}
       <aside className=" fixed top-0 bottom-0  left-0 w-64 overflow-y-auto border-r bg-white shadow-lg">
@@ -19,7 +19,7 @@ export default function DashboardLayout({ children }) {
         </header>
 
         {/* Dashboard pages */}
-        <main className=" absolute top-16 left-64 right-0 bottom-0 flex flex-1 overflow-y-auto bg-gray-100 p-6">
+        <main className=" absolute top-16 left-64 right-0 bottom-0 flex-1 overflow-y-auto bg-gray-100 p-6">
           {children}
         </main>
       </div>

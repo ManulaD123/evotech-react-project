@@ -24,11 +24,14 @@ import { MultiSelect } from "@/components/multi-select";
 import { GENRES, RATINGS } from "@/lib/constants";
 import { Loader2 } from "lucide-react";
 import {createMovie} from "@/lib/actions/movie";
+import {useToast} from "@/hooks/use-toast";
+
 
 export default function AddMovieForm() {
   const [genres, setGenres] = useState([]);
   const [rated, setRated] = useState("");
   const [isLoading, setLoading] = useState("");
+  const {toast}=useToast();
   const genresList = GENRES.map((genre) => ({
     label: genre,
     value: genre,
@@ -42,11 +45,18 @@ export default function AddMovieForm() {
     const plot = formData.get("plot")?.toString();
     const poster=formData.get("poster")?.toString();
 
-    if (title && year && plot && rated) {
+    if (title && year && plot && rated && poster ) {
       console.log({ title, year, plot, rated, genres });
       setLoading(true);
-      await createMovie({title, year, plot,poster, rated, genres})
+      const resp=await createMovie({title, year, plot,poster, rated, genres})
       setLoading(false);
+      if (resp.success){
+        toast({
+          variant:"success",
+          title:"Movie Added!",
+          description:"Movie was added to Mflix database."
+        });
+      }
     }
   };
 
@@ -98,6 +108,7 @@ export default function AddMovieForm() {
               list={genresList}
               placeholder="Select movie genres"
               onValueChange={setGenres}
+             
             />
           </div>
           <div>
