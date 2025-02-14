@@ -10,7 +10,10 @@ const nextConfig = {
           pathname: "/**"         // Matches all paths under this domain.
         }
       ]
-    }
+    },
+    // env: {
+    //   MONGODB_URI: process.env.MONGODB_URI,  // Add your environment variable here
+    // }
   };
   
   export default nextConfig;

@@ -16,6 +16,11 @@ import {LayoutDashboard} from "lucide-react";
 import Link from "next/link";
 
 
+// Next.js will invalidate the cache when a request comes in,at most once every 60 seconds
+//export const revalidate=60;
+
+export const dynamic="force-dynamic"
+
 export default async function MoviesPublicPage() {
   // 1. Add shadcn Cad
   // 2. Create Movies GET endpoint
@@ -24,7 +29,7 @@ export default async function MoviesPublicPage() {
 
   const moviesQuery = await getMovies();
 
-  console.log("All Movies:: ", moviesQuery);
+  //console.log("All Movies:: ", moviesQuery);
 
   return (
  
