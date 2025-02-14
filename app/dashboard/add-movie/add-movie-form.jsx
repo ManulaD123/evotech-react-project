@@ -23,38 +23,45 @@ import { Textarea } from "@/components/ui/textarea";
 import { MultiSelect } from "@/components/multi-select";
 import { GENRES, RATINGS } from "@/lib/constants";
 import { Loader2 } from "lucide-react";
-import {createMovie} from "@/lib/actions/movie";
-import {useToast} from "@/hooks/use-toast";
-
+import { createMovie } from "@/lib/actions/movie";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AddMovieForm() {
   const [genres, setGenres] = useState([]);
   const [rated, setRated] = useState("");
   const [isLoading, setLoading] = useState("");
-  const {toast}=useToast();
+  const { toast } = useToast();
   const genresList = GENRES.map((genre) => ({
     label: genre,
     value: genre,
   }));
 
-  const handleSubmitForm =async (event) => {
+  const handleSubmitForm = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const title = formData.get("title")?.toString();
     const year = Number(formData.get("year"));
     const plot = formData.get("plot")?.toString();
-    const poster=formData.get("poster")?.toString();
-
-    if (title && year && plot && rated && poster ) {
-      console.log({ title, year, plot, rated, genres });
+    const poster = formData.get("poster")?.toString();
+    const imdb = Number(formData.get("imdb"));
+    if (title && year && plot && rated && poster) {
+      console.log({ title, year, plot, rated, genres, imdb });
       setLoading(true);
-      const resp=await createMovie({title, year, plot,poster, rated, genres})
+      const resp = await createMovie({
+        title,
+        year,
+        plot,
+        poster,
+        rated,
+        genres,
+        imdb: { rating: imdb },
+      });
       setLoading(false);
-      if (resp.success){
+      if (resp.success) {
         toast({
-          variant:"success",
-          title:"Movie Added!",
-          description:"Movie was added to Mflix database."
+          variant: "success",
+          title: "Movie Added Successfully!",
+          description: "Movie was added to Mflix database.",
         });
       }
     }
@@ -107,8 +114,8 @@ export default function AddMovieForm() {
             <MultiSelect
               list={genresList}
               placeholder="Select movie genres"
+              selectedItems={genres}
               onValueChange={setGenres}
-             
             />
           </div>
           <div>
@@ -125,6 +132,19 @@ export default function AddMovieForm() {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="year">IMDB Rating</Label>
+            <Input
+              id="imdb"
+              name="imdb"
+              max="10.0"
+              min="0"
+              step="0.1"
+              type="number"
+              placeholder="Enter imdb rating"
+            />
           </div>
         </CardContent>
         <CardFooter className="w-full flex justify-end space-x-2">

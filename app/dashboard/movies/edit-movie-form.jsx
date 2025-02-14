@@ -12,7 +12,7 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectTrigger,
+  SelectTrigger, 
   SelectValue,
 } from "@/components/ui/select";
 
@@ -24,22 +24,34 @@ import { MultiSelect } from "@/components/multi-select";
 import { GENRES, RATINGS } from "@/lib/constants";
 import { Loader2 } from "lucide-react";
 
-export default function EditMovieForm({movie, open, onCancel, isLoading }) {
+export default function EditMovieForm({ movie, open, onCancel,onSubmit, isLoading }) {
   const [title, setTitle] = useState(movie?.title);
   const [year, setYear] = useState(movie?.year);
   const [plot, setPlot] = useState(movie?.plot);
   const [genres, setGenres] = useState(movie?.genres);
   const [poster, setPoster] = useState(movie?.poster);
   const [rated, setRated] = useState(movie?.rated);
-  const [imdbRating, setIMDBRating] = useState(movie.imdb?.rating??0);
+  const [imdbRating, setIMDBRating] = useState(movie.imdb?.rating ?? 0);
 
   const genresList = GENRES.map((genre) => ({
     label: genre,
     value: genre,
   }));
 
-  const handleSubmitForm = () => {
-    //
+  const handleSubmitForm = (e) => {
+    // Save the updated movie to the database
+    e.preventDefault();
+    onSubmit({
+      ...movie,
+      title,
+      year,
+      plot,
+      genres,
+      poster,
+      rated,
+      imdb:{rating:imdbRating}
+    });
+  
   };
   return (
     <Dialog open={open} onOpenChange={onCancel}>
@@ -57,7 +69,7 @@ export default function EditMovieForm({movie, open, onCancel, isLoading }) {
                 id="title"
                 name="title"
                 value={title}
-                onChange={(e)=>setTitle(e.target.value)}
+                onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter the movie title"
               />
             </div>
@@ -68,7 +80,7 @@ export default function EditMovieForm({movie, open, onCancel, isLoading }) {
                 name="year"
                 type="number"
                 value={year}
-                onChange={(e)=>setYear(Number(e.target.value))}
+                onChange={(e) => setYear(Number(e.target.value))}
                 placeholder="Enter the movie year"
               />
             </div>
@@ -78,7 +90,7 @@ export default function EditMovieForm({movie, open, onCancel, isLoading }) {
                 id="plot"
                 name="plot"
                 value={plot}
-                onChange={(e)=>setPlot(e.target.value)}
+                onChange={(e) => setPlot(e.target.value)}
                 placeholder="Enter the movie plot"
               />
             </div>
@@ -89,18 +101,18 @@ export default function EditMovieForm({movie, open, onCancel, isLoading }) {
                 name="poster"
                 type="text"
                 value={poster}
-                onChange={(e)=>setPoster(e.target.value)}
+                onChange={(e) => setPoster(e.target.value)}
                 placeholder="Enter the movie poster URL"
               />
             </div>
 
             <div>
               <Label htmlFor="genres">Movie Genres</Label>
-              <MultiSelect 
+              <MultiSelect
                 list={genresList}
                 placeholder="Select movie genres"
+                selectedItems={genres}
                 onValueChange={setGenres}
-                
               />
             </div>
 
@@ -118,6 +130,21 @@ export default function EditMovieForm({movie, open, onCancel, isLoading }) {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="year">IMDB Rating</Label>
+              <Input
+                id="imdb"
+                name="imdb"
+                max="10.0"
+                min="0"
+                step="0.1"
+                type="number"
+                placeholder="Enter imdb rating"
+                value={imdbRating} //----------------------------------------------> Controlled input
+                onChange={(e) => setIMDBRating(Number(e.target.value))} //---------> Controlled input
+              />
             </div>
 
             <div className="w-full flex justify-end space-x-2">
